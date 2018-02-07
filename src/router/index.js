@@ -17,6 +17,11 @@ export default new Router({
       path: '/tweets',
       name: 'New',
       component: New
+    },
+    {
+      path: '/tweets/:id/editTweet',
+      name: 'Edit',
+      component: Edit
     }
   ]
 })

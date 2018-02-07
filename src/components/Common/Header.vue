@@ -11,6 +11,8 @@
   </div>
 </template>
 <script>
+import router from '../../router'
+
   export default {
     data() {
       return {
@@ -21,6 +23,9 @@
       handleSelect(key, keyPath) {
         console.log(key, keyPath);
       }
+    },
+    newTweet: function() {
+      router.push({name:'New'})
     }
   }
 </script>
