@@ -2,7 +2,7 @@
   <div class="newTweet">
     <p>自分の今の状況をつぶやいてみよう</p>
     <el-input type="textarea"
-    :rows="5"
+    :rows="10"
     placeholder="今あることをつぶやいてみよう"
     v-model="content">
     </el-input><br><br>
@@ -13,32 +13,32 @@
 import firebase from 'firebase'
 import firebaseApp from '../../firebaseApp.js'
 import authenticateUser from '../../auth.js'
+import router from '../../router'
 export default {
   name: 'newTweet',
   data() {
     return {
-      userInfo: [],
+      user: [],
       content: ''
     }
   },
   created: function() {
-    console.log(this.$moment().format('YYYY/MM/DD HH:mm:ss'))
     authenticateUser().then((userInfo) => {
-      this.userInfo = userInfo
+      this.user = userInfo
       console.log(this.userInfo.uid)
     })
   },
   methods: {
     tweet: function() {
       firebase.firestore().collection("Tweets").add({
-        userId: this.userInfo.uid,
-        userName: this.userInfo.displayName,
+        userId: this.user.uid,
+        userName: this.user.displayName,
         content: this.content,
-        registrationTime: this.$moment().format('YYYY/MM/DD HH:mm:ss'),
-        lastUpdateTime: this.$moment().format('YYYY/MM/DD HH:mm:ss')
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
       }).then((success) => {
-        console.log(success)
         this.content = ''
+        router.push({name: "Index"})
       }).catch((error) => {
         console.log(error)
       })

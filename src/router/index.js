@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Index from '@/components/Tweets/Index'
-import New from '@/components/Tweets/New'
-import Edit from '@/components/Tweets/Edit'
+import TweetNew from '@/components/Tweets/New'
+import TweetEdit from '@/components/Tweets/Edit'
 
 Vue.use(Router)
 
@@ -15,13 +15,13 @@ export default new Router({
     },
     {
       path: '/tweets',
-      name: 'New',
-      component: New
+      name: 'TweetNew',
+      component: TweetNew
     },
     {
-      path: '/tweets/:id/editTweet',
-      name: 'Edit',
-      component: Edit
+      path: '/tweets/:id/edit',
+      name: 'TweetEdit',
+      component: TweetEdit
     }
   ]
 })

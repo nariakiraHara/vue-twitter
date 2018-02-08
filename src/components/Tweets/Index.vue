@@ -1,18 +1,17 @@
 <template>
   <div class="timeLine">
     <div class="contents"
-    v-for="(listContent, index) in listContents"
-    :index="index"
-    :key="listContent.id">
-        {{listContent.data().userName}}<br><br>
-        {{listContent.data().content}}
-
-        <div class="userOperation" v-if="listContent.data().userId == userInfo.uid">
-           <router-link 
-           id="edit"
-           :to="{ name: 'Edit', params: { id: listContent.id, content: listContent.data().content}}">編集</router-link>
-           <el-button id="edit" type="plain" v-on:click="deleteTweet">削除</el-button>
-        </div>
+    v-for="tweet in tweets"
+    :key="tweet.id">
+      <p>{{tweet.data().userName}}</p>
+      <br><br>
+      <p>{{tweet.data().content}}</p>
+      <div class="operation" v-if="tweet.data().userId == user.uid">
+          <router-link 
+          id="edit"
+          :to="{ name: 'TweetEdit', params: { id: tweet.id}}">編集</router-link>
+          <a v-on:click="deleteTweet(tweet.id)">削除</a>
+      </div>
     </div>
     <el-button type="primary" v-on:click="newTweet">ツイートする</el-button>
   </div>
@@ -27,24 +26,28 @@ export default {
   name: 'timeLine',
   data () {
     return {
-      listContents: [],
-      userInfo: []
+      tweets: [],
+      user: []
     }
   },
   created: function() {
     authenticateUser().then((userInfo) => {
-      this.userInfo = userInfo
+      this.user = userInfo
     })
-    firebase.firestore().collection("Tweets").get().then((querySnapshot) => {
-      this.listContents = querySnapshot.docs
+    firebase.firestore().collection("Tweets").orderBy("updatedAt", "desc").get().then((querySnapshot) => {
+      this.tweets = querySnapshot.docs
     })
   },
   methods: {
     newTweet: function() {
-      router.push({name:'New'})
+      router.push({name:'TweetNew'})
     },
-    deleteTweet: function() {
-
+    deleteTweet: function(tweetId) {
+      firebase.firestore().collection("Tweets").doc(tweetId).delete().then(function() {
+        location.reload()
+      }).catch(function(error) {
+          console.error("Error removing document: ", error);
+      });
     }
   }
 }
@@ -59,16 +62,10 @@ export default {
   .contents {
     margin: 0 auto;
     width: 400px;
-    height: 400px;
+    height: 200px;
     border: solid 1px;
   }
-  .userOperation {
-    margin-top: 290px;
+  .operation {
     text-align: right;
-    width: 400px;
-    border: solid 1px;
-  }
-  #edit {
-    display: inline;
   }
 </style>
