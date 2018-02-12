@@ -43,11 +43,22 @@ export default {
       router.push({name:'TweetNew'})
     },
     deleteTweet: function(tweetId) {
-      firebase.firestore().collection("Tweets").doc(tweetId).delete().then(function() {
-        location.reload()
-      }).catch(function(error) {
+      this.$confirm('削除してもよろしいですか', '削除', {
+        confirmButtonText: 'はい',
+        cancelButtonText: 'いいえ',
+        type: 'warning'
+      }).then(() => {
+        firebase.firestore().collection("Tweets").doc(tweetId).delete().then(function() {
+          location.reload()
+        }).catch(function(error) {
           console.error("Error removing document: ", error);
-      });
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: 'Delete canceled'
+        })
+      })
     }
   }
 }
@@ -67,5 +78,6 @@ export default {
   }
   .operation {
     text-align: right;
+    text-decoration: overline;
   }
 </style>
