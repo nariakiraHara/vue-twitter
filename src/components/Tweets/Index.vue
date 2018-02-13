@@ -13,7 +13,6 @@
           <a v-on:click="deleteTweet(tweet.id)">削除</a>
       </div>
     </div>
-    <el-button type="primary" v-on:click="newTweet">ツイートする</el-button>
   </div>
 </template>
 
@@ -39,9 +38,6 @@ export default {
     })
   },
   methods: {
-    newTweet: function() {
-      router.push({name:'TweetNew'})
-    },
     deleteTweet: function(tweetId) {
       this.$confirm('削除してもよろしいですか', '削除', {
         confirmButtonText: 'はい',

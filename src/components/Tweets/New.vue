@@ -25,7 +25,6 @@ export default {
   created: function() {
     authenticateUser().then((userInfo) => {
       this.user = userInfo
-      console.log(this.userInfo.uid)
     })
   },
   methods: {
